@@ -30,7 +30,7 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
-@app.route('/user', methods=['GET'])
+@app.route('/testuser', methods=['GET'])
 def handle_hello():
 
     response_body = {
@@ -38,6 +38,28 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200
+
+@app.route("/user", methods=["GET"])
+def get_User():
+    users=User.query.all()
+    request=list(map(lambda user:user.serialize(), users))
+    return jsonify(request), 200
+
+@app.route("/user/<int:id>", methods=["GET"])
+def get_UserId(id):
+    user=User.query.filter_by(id=id).first()
+    if user is None:
+        raise APIException("Msg: user not found", status_code=404)
+    request= user.serialize()
+    return jsonify(request), 200
+
+@app.route("/user", methods=["POST"])
+def create_user():
+    data = request.get_json()
+    user1= User(username=data["username"], email=data["email"], password=data["password"])
+    db.session.add(user1)
+    db.session.commit()
+    return jsonify("Message: user added"), 200
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
