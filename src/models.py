@@ -18,3 +18,40 @@ class User(db.Model):
             "username":self.username,
             # do not serialize the password, its a security breach
         }
+
+class Planet(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name= db.Column(db.String(80), unique=True, nullable=False)
+    terrain = db.Column(db.String(120), unique=False, nullable=False)
+    climate = db.Column(db.String(80), unique=False, nullable=False)
+    diameter = db.Column(db.Integer, unique=False, nullable=False)      
+    def __repr__(self):
+        return '<Planet %r>' % self.name
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "terrain":self.terrain,
+            "climate":self.climate,
+            "Diameter":self.diameter
+                  # do not serialize the password, its a security breach
+        }      
+class Character(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name= db.Column(db.String(80), unique=True, nullable=False)
+    birth = db.Column(db.String(120), unique=False, nullable=False)
+    gender = db.Column(db.String(80), unique=False, nullable=False)
+    height = db.Column(db.Integer, unique=False, nullable=False)      
+    def __repr__(self):
+        return '<Character %r>' % self.name
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "birth":self.birth,
+            "gender":self.gender,
+            "height":self.height
+                  # do not serialize the password, its a security breach
+        }              
