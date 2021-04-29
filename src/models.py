@@ -55,3 +55,21 @@ class Character(db.Model):
             "height":self.height
                   # do not serialize the password, its a security breach
         }              
+class Favorite(db.Model):
+    id= db.Column(db.Integer, primary_key=True)
+    idUser=db.Column(db.Integer, db.ForeignKey("user.id"))
+    idCharacter=db.Column(db.Integer, db.ForeignKey("character.id"))
+    idPlanet=db.Column(db.Integer, db.ForeignKey("planet.id"))
+
+    def __repr__(self):
+        return '<Favorite %r>' % self.name
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "idUser":self.idUser,
+            "idCharacter":self.idCharacter,
+            "idPlanet":self.idPlanet
+            
+                  # do not serialize the password, its a security breach
+        }          
