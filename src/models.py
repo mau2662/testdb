@@ -60,9 +60,12 @@ class Favorite(db.Model):
     idUser=db.Column(db.Integer, db.ForeignKey("user.id"))
     idCharacter=db.Column(db.Integer, db.ForeignKey("character.id"))
     idPlanet=db.Column(db.Integer, db.ForeignKey("planet.id"))
+    user = db.relationship("User", lazy='subquery', backref=db.backref("Favorite", cascade="all,delete"))
+    planet = db.relationship("Planet", lazy='subquery', backref=db.backref("Favorite", cascade="all,delete"))    
+    character = db.relationship("Character", lazy='subquery', backref=db.backref("Favorite", cascade="all,delete"))   
 
     def __repr__(self):
-        return '<Favorite %r>' % self.name
+        return '<Favorite %r>' % self.id
 
     def serialize(self):
         return {
