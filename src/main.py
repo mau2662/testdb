@@ -53,13 +53,13 @@ def get_FavoritebyUserID(user_id):
     request=list(map(lambda favorite:favorite.serialize(), favorites))
     return jsonify(request), 200
 
-@app.route("/users/<int:user_id>/favorites", methods=["POST"])
-def create_favorite():
-    data = request.get_json()
-    favorite1= Favorite(username=data["username"], planet=data["email"], character=data["character"])
-    db.session.add(favorite1)
-    db.session.commit()
-    return jsonify("Message: user added"), 200
+#@app.route("/users/<int:user_id>/favorites", methods=["POST"])
+#def create_favorite():
+ #   data = request.get_json()
+  #  favorite1= Favorite(username=data["username"], planet=data["email"], character=data["character"])
+   # db.session.add(favorite1)
+    #db.session.commit()
+    #return jsonify("Message: user added"), 200
 
 @app.route("/user", methods=["POST"])
 def create_user():
@@ -98,6 +98,15 @@ def get_CharacterId(id):
         raise APIException("Msg: character not found", status_code=404)
     request= character.serialize()
     return jsonify(request), 200    
+
+@app.route("/favorite/<int:favorite_id>", methods=["DELETE"])
+def delete_favorite():
+    favorite = Favorite.query.get(idUser)
+    if favorite is None:
+     raise APIException('User not found', status_code=404)
+    db.session.delete(favorite)
+    db.session.commit()    
+    return jsonify("Message: user added"), 200
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
