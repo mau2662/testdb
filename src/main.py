@@ -99,14 +99,14 @@ def get_CharacterId(id):
     request= character.serialize()
     return jsonify(request), 200    
 
-@app.route("/favorite/<int:favorite_id>", methods=["DELETE"])
-def delete_favorite():
-    favorite = Favorite.query.get(idUser)
+@app.route('/favorite/<int:position>', methods=['DELETE'])
+def delete_favorite(position):
+    favorite = Favorite.query.get(position)
     if favorite is None:
      raise APIException('User not found', status_code=404)
     db.session.delete(favorite)
     db.session.commit()    
-    return jsonify("Message: user added"), 200
+    return jsonify("Message: favorite deleted"), 200
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
