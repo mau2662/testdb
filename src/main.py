@@ -47,18 +47,28 @@ def get_User():
 
 @app.route("/users/<int:user_id>/favorites", methods=["GET"])
 def get_FavoritebyUserID(user_id):
+   
     favorites=Favorite.query.filter_by(idUser=user_id)
     if favorites is None:
         raise APIException("Msg: user not found", status_code=404)
     request=list(map(lambda favorite:favorite.serialize(), favorites))
     return jsonify(request), 200
 
-@app.route("/users/<int:position>/favorites", methods=["POST"])
-def create_favorite(position):
-    data = request.get_json()
-    favorite1= Favorite(username=data["username"], planet=data["planet"], character=data["character"])
-    db.session.add(favorite1)
-    db.session.commit()
+@app.route("/users/<int:user_id>/favorites", methods=["POST"])
+def create_favorite(user_id):
+    #de esta manera se obtienen los datos
+    idPlanet = request.json.get("idPlanet", None)
+    idCharacter = request.json.get("idCharacter", None)
+    #aqui se hace la logica para crear el favorito
+    if idPlanet is not None:
+        favorite1= Favorite(idPlanet=idPlanet, idUser=user_id)
+        db.session.add(favorite1)
+        db.session.commit()
+    else: 
+        favorite1= Favorite(idCharacter=idCharacter, idUser=user_id)
+        db.session.add(favorite1)
+        db.session.commit()  
+    
     return jsonify("Message: favorite added"), 200
 
 @app.route("/user", methods=["POST"])
@@ -103,7 +113,7 @@ def get_CharacterId(id):
 def delete_favorite(position):
     favorite = Favorite.query.get(position)
     if favorite is None:
-     raise APIException('User not found', status_code=404)
+     raise APIException('Favorite not found', status_code=404)
     db.session.delete(favorite)
     db.session.commit()    
     return jsonify("Message: favorite deleted"), 200
